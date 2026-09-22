@@ -6,8 +6,8 @@
   margin-top: 8px;
   background-color: white;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   z-index: 10;
 }
@@ -31,9 +31,19 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  background-color: #f1f1f1;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #e5e5e5;
 }
 
 .pagination button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 14px;
+  color: #555;
 }

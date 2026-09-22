@@ -4,6 +4,7 @@ import './ClientDropDownMenu.css'
 
 function ClientDropDownMenu({
   clients,
+  selectedClient,
   setSelectedClient,
   setOpenClientMenu,
   currentPage,
@@ -18,6 +19,7 @@ function ClientDropDownMenu({
           <ClientDropDownItem
             key={client.id}
             client={client}
+            selectedClient={selectedClient}
             setSelectedClient={setSelectedClient}
             setOpenClientMenu={setOpenClientMenu}
           />
@@ -25,7 +27,6 @@ function ClientDropDownMenu({
       </div>
 
       <div className="pagination">
-
         <button
           disabled={currentPage === 0}
           onClick={() => setCurrentPage(currentPage - 1)}
@@ -43,7 +44,6 @@ function ClientDropDownMenu({
         >
           →
         </button>
-
       </div>
 
     </div>

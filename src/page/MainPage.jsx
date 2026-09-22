@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './MainPage.css'
 import ClientDropDownMenu from '../dropDownMenu/ClientDropDownMenu'
+import ProductHolder from '../products/ProductHolder'
 import { API_URL } from '../../config'
 
 const MainPage = () => {
@@ -77,6 +78,7 @@ const MainPage = () => {
         {openClientMenu && (
           <ClientDropDownMenu
             clients={clients}
+            selectedClient={selectedClient}
             setSelectedClient={setSelectedClient}
             setOpenClientMenu={setOpenClientMenu}
             currentPage={currentPage}
@@ -86,6 +88,8 @@ const MainPage = () => {
         )}
 
       </div>
+
+      <ProductHolder clientId={selectedClient?.id} />
 
     </main>
   )

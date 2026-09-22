@@ -1,0 +1,72 @@
+.product-card {
+  position: relative;
+  width: 260px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Colores según el tipo de cuenta (estado activo) */
+.product-blue.state-active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+.product-green.state-active {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+/* Inactivo: gris */
+.product-blue.state-inactive,
+.product-green.state-inactive {
+  background-color: #9ca3af;
+}
+
+/* Cancelado: gris más oscuro */
+.product-blue.state-cancelled,
+.product-green.state-cancelled {
+  background-color: #4b5563;
+  opacity: 0.85;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  opacity: 0.85;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.product-number {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.product-balance {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.product-cancelled-tag {
+  align-self: flex-start;
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.product-gmf {
+  font-size: 12px;
+  opacity: 0.8;
+}
