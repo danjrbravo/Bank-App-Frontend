@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import './MainPage.css'
 import ClientDropDownMenu from '../dropDownMenu/ClientDropDownMenu'
 import ProductHolder from '../products/ProductHolder'
+import CreateClientModal from './modals/CreateClientModal'
 import { API_URL } from '../../config'
 
 const MainPage = () => {
@@ -13,6 +14,11 @@ const MainPage = () => {
 
   const [currentPage, setCurrentPage] = useState(0)
   const [totalPages, setTotalPages] = useState(0)
+
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [deleteError, setDeleteError] = useState(null)
+
+  const [showCreateClientModal, setShowCreateClientModal] = useState(false)
 
   const fetchData = async (page) => {
     try {
@@ -49,6 +55,46 @@ const MainPage = () => {
     fetchData(currentPage)
   }, [currentPage])
 
+  const handleDeleteClient = async () => {
+    if (!selectedClient) return
+
+    const confirmed = window.confirm(
+      `¿Estás seguro de eliminar a ${selectedClient.firstname} ${selectedClient.lastName}?`
+    )
+    if (!confirmed) return
+
+    try {
+      setDeleteLoading(true)
+      setDeleteError(null)
+
+      const response = await fetch(`${API_URL}/api/clients/${selectedClient.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.status === 409) {
+        setDeleteError('El cliente tiene productos registrados, no se puede eliminar')
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error('No se pudo eliminar el cliente')
+      }
+
+      setSelectedClient(null)
+      fetchData(currentPage)
+
+    } catch (err) {
+      setDeleteError(err.message)
+      console.error(err)
+    } finally {
+      setDeleteLoading(false)
+    }
+  }
+
+  const handleCreateClientSuccess = () => {
+    fetchData(currentPage)
+  }
+
   if (loading) {
     return <div className="main-page">Cargando clientes...</div>
   }
@@ -60,36 +106,66 @@ const MainPage = () => {
   return (
     <main className="main-page">
 
-      <div className="client-selector">
+      <div className="client-selector-row">
+
+        <div className="client-selector">
+
+          <button
+            className="selected-client"
+            onClick={() => setOpenClientMenu(!openClientMenu)}
+          >
+            <span>
+              {selectedClient
+                ? `${selectedClient.firstname} ${selectedClient.lastName}`
+                : 'Seleccionar cliente'}
+            </span>
+
+            <span>⌄</span>
+          </button>
+
+          {openClientMenu && (
+            <ClientDropDownMenu
+              clients={clients}
+              selectedClient={selectedClient}
+              setSelectedClient={setSelectedClient}
+              setOpenClientMenu={setOpenClientMenu}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
+
+        </div>
 
         <button
-          className="selected-client"
-          onClick={() => setOpenClientMenu(!openClientMenu)}
+          className="create-client-btn"
+          onClick={() => setShowCreateClientModal(true)}
+          title="Crear cliente"
         >
-          <span>
-            {selectedClient
-              ? `${selectedClient.firstname} ${selectedClient.lastName}`
-              : 'Seleccionar cliente'}
-          </span>
-
-          <span>⌄</span>
+          Crear Cliente
         </button>
 
-        {openClientMenu && (
-          <ClientDropDownMenu
-            clients={clients}
-            selectedClient={selectedClient}
-            setSelectedClient={setSelectedClient}
-            setOpenClientMenu={setOpenClientMenu}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
-          />
-        )}
+        <button
+          className="delete-client-btn"
+          disabled={!selectedClient || deleteLoading}
+          onClick={handleDeleteClient}
+          title="Eliminar cliente"
+        >
+          Eliminar Cliente
+        </button>
 
       </div>
 
+      {deleteError && <div className="delete-client-error">{deleteError}</div>}
+
       <ProductHolder clientId={selectedClient?.id} />
+
+      {showCreateClientModal && (
+        <CreateClientModal
+          onClose={() => setShowCreateClientModal(false)}
+          onSuccess={handleCreateClientSuccess}
+        />
+      )}
 
     </main>
   )
